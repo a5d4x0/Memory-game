@@ -4,11 +4,13 @@ let listenNum = 0;
 let cardNum = 0;
 let cMoves = 0;
 let starNum = 3;
+let startTime;
+let second = 0;
+let millisecond = 0;
 let arrayCard = new Array();
 let clickCard = new Array(2);
 let childCard = new Array(2);
 let congraStr = new Array(3);
-let startTime = new Date().getTime();
 let listCard = document.getElementsByClassName("card");
 let listStar = document.getElementsByClassName("stars");
 
@@ -92,26 +94,40 @@ function matchTest() {
  * 卡片翻开
  */
 function listenCard() {
+    if(second === 0) {
+        startTime =setInterval(timer,50);
+    }
     this.setAttribute("class", "card open show");  
+}
+
+/**
+ * 计时
+ */
+function timer()
+{
+  millisecond=millisecond+50;
+  second = (millisecond/1000).toFixed(2);
+  document.getElementById('seconds').innerHTML = second;
+
 }
 
 /**
  *根据步数更新星星数 
  */
 function moveTest() {
-    if(cMoves == 14) {
+    if(cMoves === 14) {
         Array.prototype.map.call(listStar[0].children[2].children, function(n) {
             n.setAttribute("class", "fa fa-star-o");
         });
         starNum = 2;
     }
-    if(cMoves == 30) {
+    if(cMoves === 30) {
         Array.prototype.map.call(listStar[0].children[1].children, function(n) {
             n.setAttribute("class", "fa fa-star-o");
         });
         starNum = 1;
     }
-    if(cMoves == 40) {
+    if(cMoves === 40) {
         Array.prototype.map.call(listStar[0].children[0].children, function(n) {
             n.setAttribute("class", "fa fa-star-o");
         });
@@ -123,11 +139,10 @@ function moveTest() {
  * 检查是否通过
  */
 function successTest() {
-    if(cardNum == 8) {
-        let endTime = new Date().getTime();
-        let totalTime = ((endTime - startTime)/1000).toFixed(2);
+    if(cardNum === 8) {
+        window.clearInterval(startTime);
         congraStr[0] = "Congratulations! You won!";
-        congraStr[1] = "Spend times: " + totalTime + " seconds!";
+        congraStr[1] = "Spend times: " + second + " seconds!";
         congraStr[2] = "With move " + cMoves + " steps and " + starNum + " stars!";
         setTimeout(function() { 
             showSuccess();
@@ -139,7 +154,7 @@ function successTest() {
  * 卡片翻开后的事件处理
  */
 function upCard() {
-    if(control == 0) {
+    if(control === 0) {
         clickCard[control] = this;
         control ++;
     } else {
